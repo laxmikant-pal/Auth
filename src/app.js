@@ -16,6 +16,9 @@ require('./config/passport');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Serve static files from the 'public' folder
+app.use(express.static('public'));
+
 app.use(bodyParser.json());
 
 mongoose.connect(process.env.MONGODB_URI, {
@@ -41,8 +44,8 @@ app.use(passport.session());
 app.use('/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api', productRoutes);
-app.use('/api',brandRoutes);
-app.use('/api',categoryRoutes);
+app.use('/api', brandRoutes);
+app.use('/api', categoryRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
