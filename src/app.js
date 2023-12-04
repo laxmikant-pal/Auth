@@ -14,10 +14,15 @@ require('./config/multerSetup');
 dotenv.config();
 require('./config/passport');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Serve static files from the 'public' folder
 app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+  // Send the 'index.html' file as the response
+  res.sendFile(__dirname + '/public/index.html');
+});
 
 app.use(bodyParser.json());
 
