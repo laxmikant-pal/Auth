@@ -26,16 +26,15 @@ app.get('/', (req, res) => {
 
 app.use(bodyParser.json());
 
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
-
+// mongoose.connect(process.env.MONGODB_URI, {
+//   useNewUrlParser: true
+// });
 app.use(session({
   secret: 'your-secret-key',
   resave: false,
   saveUninitialized: true,
-  store: new MongoStore({ url: 'mongodb+srv://laxmikant:Mwb7l0uMTbJMerRq@cluster0.sljmqgy.mongodb.net/user' }),
+  store: new MongoStore({ url:process.env.MONGODB_URI }),
 }));
-
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error: "));
 db.once("open", function () {
