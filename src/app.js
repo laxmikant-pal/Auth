@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 app.use(bodyParser.json());
 
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true
+  
 });
 
 const db = mongoose.connection;
