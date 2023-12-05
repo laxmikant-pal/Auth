@@ -20,21 +20,15 @@ const PORT = process.env.PORT;
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-  // Send the 'index.html' file as the response
   res.sendFile(__dirname + '/public/index.html');
 });
 
 app.use(bodyParser.json());
 
-// mongoose.connect(process.env.MONGODB_URI, {
-//   useNewUrlParser: true
-// });
-app.use(session({
-  secret: 'your-secret-key',
-  resave: false,
-  saveUninitialized: true,
-  store: new MongoStore({ url:process.env.MONGODB_URI }),
-}));
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true
+});
+
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error: "));
 db.once("open", function () {
