@@ -8,9 +8,6 @@ exports.createBrand = async (req, res, next) => {
     const result = await Brand.create(req.body);
 
     res.status(201).json({
-      acknowledgement: true,
-      message: "Created",
-      description: "Successfully created new brand credentials",
       data: result,
     });
   } catch (error) {
@@ -29,12 +26,9 @@ exports.displayBrands = async (req, res, next) => {
     const count = await Brand.estimatedDocumentCount();
 
     res.status(200).json({
-      acknowledgement: true,
-      message: "OK",
-      count: count,
-      description: "Successfully fetch all brand credentials",
-      totalData: result.length,
       data: result,
+      count: count,
+      totalData: result.length,
     });
   } catch (error) {
     next(error);
@@ -51,9 +45,6 @@ exports.updateBrand = async (req, res, next) => {
     });
 
     res.status(202).json({
-      acknowledgement: true,
-      message: "Accepted",
-      description: "Successfully update specific brand credentials",
       data: result,
     });
   } catch (error) {
@@ -65,13 +56,8 @@ exports.updateBrand = async (req, res, next) => {
 exports.removeBrand = async (req, res, next) => {
   try {
     const result = await Brand.findByIdAndDelete(req.params.id);
-    await remove(result.logo.public_id);
-
     res.status(202).json({
-      acknowledgement: true,
-      message: "Accepted",
       description: "Successfully remove specific brand credentials",
-      data: result,
     });
   } catch (error) {
     next(error);

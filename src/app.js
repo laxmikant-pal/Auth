@@ -9,6 +9,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const brandRoutes = require('./routes/brandRoutes');
 const Category = require('./models/categoryModel');
+const subcategoryRoutes = require('./routes/subcategoryRoutes')
 const categoryRoutes = require('./routes/categoryRoutes');
 require('./config/multerSetup');
 dotenv.config();
@@ -52,7 +53,7 @@ app.use('/api/user', userRoutes);
 app.use('/api', productRoutes);
 app.use('/api', brandRoutes);
 app.use('/api', categoryRoutes);
-
+app.use('/api', subcategoryRoutes);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

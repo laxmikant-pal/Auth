@@ -2,7 +2,6 @@ const Product = require('../models/productModel');
 const Subcategory = require('../models/subcategoryModel');
 const upload = require('../config/multerSetup');
 const Brand = require('../models/brandModel');
-
 exports.createProduct = async (req, res) => {
   try {
     upload.single('image')(req, res, async (err) => {
@@ -21,11 +20,39 @@ exports.createProduct = async (req, res) => {
       await Brand.findByIdAndUpdate(result.brand, {
         $push: { products: result._id },
       });
+      const responseObj = {
+        _id: result._id,
+        title: result.title,
+        description: result.description,
+        sizes: result.sizes,
+        colors: result.colors,
+        price_per_unit: result.price_per_unit,
+        weight: result.weight,
+        image: result.image,
+        availability: result.availability,
+        available_Qty: result.available_Qty,
+        subcategory: result.subcategory,
+        category: result.category,
+        review: result.review,
+        rating: result.rating,
+        createdAt: result.createdAt,
+        updatedAt: result.updatedAt,
+        __v: result.__v
+      };
 
-      res.status(201).json(result);
+      res.status(201).json(responseObj);
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+exports.displayAllProduct = async (req, res) => {
+  try {
+    const product = await Product.find();
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -106,6 +133,74 @@ exports.displayProducts = async (req, res) => {
   }
 };
 
+exports.displayAllProductsBySub = async (req, res) => {
+  try {
+    const { category } = req.params;
+    console.log(req.params);
+    console.log("MongoDB Query:", { category, status: "active" });
+    const result = await Product.find({ category, status: "active" })
+      .sort("-updatedAt")
+      .populate('category')
+      .populate('subcategory')
+     
+    const totalData = await Product.estimatedDocumentCount();
+console.log(result);
+    res.status(200).json({ products: result, totalData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+// exports.getSubCategoriesWithProducts = async (req, res, next) => {
+//   try {
+//     const subcategories = await Subcategory.aggregate([
+//       {
+//         $lookup: {
+//           from: 'products',
+//           localField: '_id',
+//           foreignField: 'subcategory',
+//           as: 'products',
+//         }
+//       },
+//       {
+//         $match: {
+//           status: 'active',
+//           'products.status': 'active', 
+//         },
+//       },
+//       {
+//         $project: {
+//           _id: 1,
+//           title: 1,
+//           logo: '$logo.url',
+//           products: {
+//             $filter: {
+//               input: '$products',
+//               as: 'product',
+//               cond: { $eq: ['$$product.status', 'active'] },
+//             },
+//           },
+//         },
+//       },
+//       {
+//         $limit: 1,
+//       },
+//     ]);
+
+//     console.log(subcategories);
+
+//     const totalData = subcategories.length;
+
+//     res.status(200).json({ products: subcategories, totalData });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// };
+
+
+
 exports.updateProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -117,9 +212,12 @@ exports.updateProduct = async (req, res) => {
 
 exports.removeProduct = async (req, res) => {
   try {
-    await Product.findByIdAndDelete(req.params.id);
-    res.status(204).end();
+    const productId = req.params.id;
+    await Product.findByIdAndDelete(productId);
+
+    res.json({ message: 'Product removed successfully' });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
+

@@ -31,7 +31,7 @@ exports.updateSubcategory = async (req, res) => {
 exports.deleteSubcategory = async (req, res) => {
   try {
     await Subcategory.findByIdAndDelete(req.params.id);
-    res.status(204).end();
+    res.json({ message: 'Product removed successfully' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
