@@ -57,6 +57,12 @@ image: {
     type: String
     
  },
+
+ status: { 
+  type: String, 
+  required: true
+},
+
   rating: { 
     type: Number
  },

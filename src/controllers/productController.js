@@ -152,52 +152,52 @@ console.log(result);
   }
 };
 
-// exports.getSubCategoriesWithProducts = async (req, res, next) => {
-//   try {
-//     const subcategories = await Subcategory.aggregate([
-//       {
-//         $lookup: {
-//           from: 'products',
-//           localField: '_id',
-//           foreignField: 'subcategory',
-//           as: 'products',
-//         }
-//       },
-//       {
-//         $match: {
-//           status: 'active',
-//           'products.status': 'active', 
-//         },
-//       },
-//       {
-//         $project: {
-//           _id: 1,
-//           title: 1,
-//           logo: '$logo.url',
-//           products: {
-//             $filter: {
-//               input: '$products',
-//               as: 'product',
-//               cond: { $eq: ['$$product.status', 'active'] },
-//             },
-//           },
-//         },
-//       },
-//       {
-//         $limit: 1,
-//       },
-//     ]);
+exports.getSubCategoriesWithProducts = async (req, res, next) => {
+  try {
+    const subcategories = await Subcategory.aggregate([
+      {
+        $lookup: {
+          from: 'products',
+          localField: '_id',
+          foreignField: 'subcategory',
+          as: 'products',
+        }
+      },
+      {
+        $match: {
+          status: 'active',
+          'products.status': 'active', 
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          logo: '$logo.url',
+          products: {
+            $filter: {
+              input: '$products',
+              as: 'product',
+              cond: { $eq: ['$$product.status', 'active'] },
+            },
+          },
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
 
-//     console.log(subcategories);
+    console.log(subcategories);
 
-//     const totalData = subcategories.length;
+    const totalData = subcategories.length;
 
-//     res.status(200).json({ products: subcategories, totalData });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// };
+    res.status(200).json({ products: subcategories, totalData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 
 
