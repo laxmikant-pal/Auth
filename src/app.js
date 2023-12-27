@@ -11,6 +11,8 @@ const brandRoutes = require('./routes/brandRoutes');
 const Category = require('./models/categoryModel');
 const subcategoryRoutes = require('./routes/subcategoryRoutes')
 const categoryRoutes = require('./routes/categoryRoutes');
+const paymentRoute = require('./routes/paymentRoute');
+const orderRoutes = require('./routes/orderRoutes');
 require('./config/multerSetup');
 dotenv.config();
 require('./config/passport');
@@ -25,6 +27,10 @@ app.get('/', (req, res) => {
 });
 
 app.use(bodyParser.json());
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use('/api', paymentRoute);
+
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -54,6 +60,7 @@ app.use('/api', productRoutes);
 app.use('/api', brandRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', subcategoryRoutes);
+app.use('/api', orderRoutes)
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -2,11 +2,27 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
 exports.register = async (req, res) => {
-  try {
-    const newUser = new User({ username: req.body.username });
-
-    await User.register(newUser, req.body.password);
-
+    try {
+      // Create a new user with only the required fields for passport-local-mongoose
+      const newUser = new User({ username: req.body.username });
+  
+      // Use passport-local-mongoose to register the user with the password
+      await User.register(newUser, req.body.password);
+  
+      // Now, update the additional fields
+      const user = await User.findOne({ username: req.body.username });
+      if (user) {
+        user.gender = req.body.gender;
+        user.role = req.body.role;
+        user.status = req.body.status;
+        user.dob = req.body.dob;
+        user.cart = req.body.cart;
+        user.ShippingAddress = req.body.ShippingAddress;
+        user.ShippingDetails = req.body.ShippingDetails;
+  
+        // Save the updated user
+        await user.save();
+      }
     res.json({ message: 'Registration successful' });
   } catch (error) {
     res.status(400).json({ error: error.message });
