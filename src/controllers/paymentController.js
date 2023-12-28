@@ -35,8 +35,8 @@ const payProduct = async (req, res) => {
       "intent": "sale",
       "payer": { "payment_method": "paypal" },
       "redirect_urls": {
-        "return_url": "http://localhost:3000/api/success/" + orderId,
-        "cancel_url": "http://localhost:3000/api/cancel/" + orderId
+        "return_url": "https://auth-production-2eec.up.railway.app/api/success/" + orderId,
+        "cancel_url": "https://auth-production-2eec.up.railway.app/api/cancel/" + orderId
       },
       "transactions": [{
         "item_list": {
